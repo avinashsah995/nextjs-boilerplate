@@ -1,0 +1,18 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - if [ "${ENV}" = "prod" ]; then echo $DECRYPTION_KEY_PROD > .production.key; fi
+        - if [ "${ENV}" = "staging" ]; then echo $DECRYPTION_KEY_STAGING > .staging.key; fi
+        - npm install
+    build:
+      commands:
+        - npm run build:$ENV
+  artifacts:
+    baseDirectory: .next
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
